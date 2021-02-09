@@ -1,0 +1,63 @@
+version: "3"
+
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbitt
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    restart: always
+    network_mode: host  
+
+  relay:
+    build: 
+      context: .
+      dockerfile: RelayDockerfile
+    ports:
+      - "8090:8090"
+    restart: always
+    depends_on:
+      - rabbit
+      - mongocomponent
+    environment:
+#      - MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - MONGODB_URI=mongodb://camarguinho:camarguinho@mongocomponent:27017/
+      - RABBITMQ_PORT=5672
+#      - RABBITMQ_URL=amqp://guest:guest@172.20.0.3:5672/
+      - RABBITMQ_URL=amqp://guest:guest@rabbitt/
+    network_mode: host        
+
+  consumer:
+    build: 
+      context: .
+      dockerfile: ConsumerDockerfile
+    ports:
+      - "8091:8091"
+    restart: always
+    depends_on:
+      - rabbit
+      - mongocomponent
+      - relay
+    environment:
+#      - MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - MONGODB_URI=mongodb://camarguinho:camarguinho@mongocomponent:27017/
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_URL=amqp://guest:guest@rabbitt/
+    network_mode: host         
+
+  mongocomponent:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_DATABASE=component-db
+      - MONGO_INITDB_ROOT_USERNAME=camarguinho
+      - MONGO_INITDB_ROOT_PASSWORD=camarguinho
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongod/config/mongod.conf:/etc/mongod.conf
+    network_mode: host     
+
+networks:
+  gaga:
+    driver: bridge
