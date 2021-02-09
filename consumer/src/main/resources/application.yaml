@@ -1,16 +1,15 @@
 spring:
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://camarguinho:camarguinho@localhost:27017/}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://camarguinho:camarguinho@localhost:27017/}
       database: component-db
       authentication-database: admin
-  rabbit:
-    port: ${RABBITMQ_PORT:5672}
-    host: ${RABBITMQ_HOST:localhost}
-    username: ${RABBITMQ_USERNAME:guest}
-    password: ${RABBITMQ_PASSWORD:guest}
+  rabbitmq:
+    port: 5672
+    host: ${SPRING_RABBITMQ_HOST:localhost}
+    username: guest
+    password: guest
     queue: component-zone
-    url: ${RABBITMQ_URL:amqp://guest:guest@$localhost:5672/}
     consumer-tag: component-zone
 
 server:

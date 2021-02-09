@@ -9,14 +9,20 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class RabbitmqConfiguration(
-    @Value("\${spring.rabbit.url}") private val URL: String,
-    @Value("\${spring.rabbit.queue}") private val QUEUE_NAME: String
+    @Value("\${spring.rabbitmq.username}") private val USERNAME: String,
+    @Value("\${spring.rabbitmq.password}") private val PASSWORD: String,
+    @Value("\${spring.rabbitmq.host}") private val HOST: String,
+    @Value("\${spring.rabbitmq.port}") private val PORT: String,
+    @Value("\${spring.rabbitmq.queue}") private val QUEUE_NAME: String
 ) {
 
+
+
     fun conn(): Connection? {
+        val url = "amqp://${USERNAME}:${PASSWORD}@${HOST}:${PORT}/"
         val factory = ConnectionFactory()
-        println(URL)
-        return factory.newConnection(URL)
+        println(url)
+        return factory.newConnection(url)
     }
 
     @Bean

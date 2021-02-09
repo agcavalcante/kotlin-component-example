@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class ConsumerListener(val mapperService: MapperService) {
 
-    @RabbitListener(queues = ["\${spring.rabbit.queue}"])
+    @RabbitListener(queues = ["\${spring.rabbitmq.queue}"])
     fun receivedMessage(msg: String) {
         mapperService.remappingToComponent(msg)
     }

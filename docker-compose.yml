@@ -1,53 +1,45 @@
 version: "3"
 
 services:
-  rabbit:
+  rabbitmq:
     image: rabbitmq:3-management
-    hostname: rabbitt
+    hostname: rabbitmq
     ports:
       - "15672:15672"
-      - "5672:5672"
-    restart: always
-    network_mode: host  
+      - "5670:5672"
+    restart: on-failure
+    network_mode: host
 
   relay:
-    build: 
-      context: .
-      dockerfile: RelayDockerfile
+    image: gbrlanrd/relay:latest
     ports:
       - "8090:8090"
-    restart: always
+    restart: on-failure
     depends_on:
-      - rabbit
-      - mongocomponent
+      - rabbitmq
+      - mongodb
     environment:
-#      - MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
-      - MONGODB_URI=mongodb://camarguinho:camarguinho@mongocomponent:27017/
-      - RABBITMQ_PORT=5672
-#      - RABBITMQ_URL=amqp://guest:guest@172.20.0.3:5672/
-      - RABBITMQ_URL=amqp://guest:guest@rabbitt/
-    network_mode: host        
+      - SPRING_DATA_MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - SPRING_RABBITMQ_HOST=localhost  
+    network_mode: host
 
   consumer:
-    build: 
-      context: .
-      dockerfile: ConsumerDockerfile
+    image: gbrlanrd/consumer:latest
     ports:
       - "8091:8091"
-    restart: always
+    restart: on-failure
     depends_on:
-      - rabbit
-      - mongocomponent
+      - rabbitmq
+      - mongodb
       - relay
     environment:
-#      - MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
-      - MONGODB_URI=mongodb://camarguinho:camarguinho@mongocomponent:27017/
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_URL=amqp://guest:guest@rabbitt/
-    network_mode: host         
+      - SPRING_DATA_MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - SPRING_RABBITMQ_HOST=localhost  
+    network_mode: host
 
-  mongocomponent:
-    image: mongo:latest
+  mongodb:
+    image: mongo:4.4.3
+    hostname: mongodb
     environment:
       - MONGO_INITDB_DATABASE=component-db
       - MONGO_INITDB_ROOT_USERNAME=camarguinho
@@ -56,8 +48,3 @@ services:
       - "27017:27017"
     volumes:
       - ./mongod/config/mongod.conf:/etc/mongod.conf
-    network_mode: host     
-
-networks:
-  gaga:
-    driver: bridge
