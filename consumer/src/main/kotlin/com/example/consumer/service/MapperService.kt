@@ -17,6 +17,7 @@ class MapperService(private val mapper: ObjectMapper,
         when (jsonObject.get("method").asString) {
             "POST" -> componentRepository.save(componentMapped)
             "PUT" -> componentRepository.save(componentMapped)
+            "DELETE" -> componentRepository.save(componentMapped)
         }
     }
 }
