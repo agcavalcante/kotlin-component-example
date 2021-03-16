@@ -1,6 +1,6 @@
 package builder
 
-import com.example.demo.data.Component
+import com.example.demo.data.component.Component
 import org.bson.types.ObjectId
 
 class ComponentBuilder private constructor(

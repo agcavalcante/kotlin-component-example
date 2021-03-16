@@ -20,3 +20,16 @@ server:
   port: 8090
   error:
     include-message: always
+
+jwt:
+  secret: littlesecret
+  expiration: 600000
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
