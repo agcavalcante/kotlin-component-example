@@ -1,24 +1,32 @@
 package com.example.demo.web
 
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder
-import springfox.documentation.builders.PathSelectors
-import springfox.documentation.builders.RequestHandlerSelectors
-import springfox.documentation.service.ApiInfo
-import springfox.documentation.service.Contact
-import springfox.documentation.spi.DocumentationType
-import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.*;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2
+import java.util.*
+
 
 @Configuration
 @EnableSwagger2
 class SwaggerConfiguration {
 
+    companion object {
+        const val AUTHORIZATION_HEADER = "Authorization"
+    }
+
     @Bean
     fun createRestApi(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
             .apiInfo(getApiInfo())
+            .securityContexts(listOf(securityContext()))
+            .securitySchemes(listOf(apiKey()))
             .select()
             .apis(RequestHandlerSelectors.basePackage("com.example.demo.controller"))
             .paths(PathSelectors.any())
@@ -35,5 +43,22 @@ class SwaggerConfiguration {
             .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0")
             .contact(contact)
             .build()
+    }
+
+    private fun apiKey(): ApiKey? {
+        return ApiKey("JWT", AUTHORIZATION_HEADER, "header")
+    }
+
+    private fun securityContext(): SecurityContext? {
+        return SecurityContext.builder()
+                .securityReferences(defaultAuth())
+                .build()
+    }
+
+    fun defaultAuth(): List<SecurityReference?>? {
+        val authorizationScope = AuthorizationScope("global", "accessEverything")
+        val authorizationScopes: Array<AuthorizationScope?> = arrayOfNulls<AuthorizationScope>(1)
+        authorizationScopes[0] = authorizationScope
+        return listOf(SecurityReference("JWT", authorizationScopes))
     }
 }

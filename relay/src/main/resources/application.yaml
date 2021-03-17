@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://camarguinho:camarguinho@localhost:27017/}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://root:root@localhost:27017/}
       database: component-db
       authentication-database: admin
   rabbitmq:
@@ -20,3 +20,16 @@ server:
   port: 8090
   error:
     include-message: always
+
+jwt:
+  secret: littlesecret
+  expiration: 600000
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
