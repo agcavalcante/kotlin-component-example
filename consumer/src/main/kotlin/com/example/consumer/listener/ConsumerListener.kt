@@ -9,7 +9,7 @@ class ConsumerListener(val mapperService: MapperService) {
 
     @RabbitListener(queues = ["\${spring.rabbitmq.queue}"])
     fun receivedMessage(msg: String) {
-        mapperService.remappingToComponent(msg)
+        mapperService.remappingToClient(msg)
     }
 
 }

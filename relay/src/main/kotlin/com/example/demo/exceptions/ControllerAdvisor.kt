@@ -20,9 +20,9 @@ class ControllerAdvisor : ResponseEntityExceptionHandler() {
         return ResponseEntity(errorsDetails, HttpStatus.NOT_FOUND)
     }
 
-    @ExceptionHandler(value = [(IllegalQuantityException::class)])
-    fun handleConflict(exception: IllegalQuantityException, request: WebRequest): ResponseEntity<ErrorsDetails> {
-        val errorsDetails = ErrorsDetails(Date(), "Wrong value to parameter", exception.message!!)
+    @ExceptionHandler(value = [(IllegalCpfFormatException::class)])
+    fun handleConflict(exception: IllegalCpfFormatException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorsDetails = ErrorsDetails(Date(), "Wrong format to parameter", exception.message!!)
         return ResponseEntity(errorsDetails, HttpStatus.NOT_ACCEPTABLE)
     }
 

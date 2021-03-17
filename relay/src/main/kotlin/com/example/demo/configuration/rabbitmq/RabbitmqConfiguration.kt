@@ -21,7 +21,6 @@ class RabbitmqConfiguration(
     fun conn(): Connection? {
         val url = "amqp://${USERNAME}:${PASSWORD}@${HOST}:${PORT}/"
         val factory = ConnectionFactory()
-        println(url)
         return factory.newConnection(url)
     }
 
@@ -33,22 +32,22 @@ class RabbitmqConfiguration(
 
     @Bean
     fun declareExchange() {
-        conn()?.createChannel()?.exchangeDeclare("component-exchange", "direct", true)
+        conn()?.createChannel()?.exchangeDeclare("user-exchange", "direct", true)
     }
 
     @Bean
     fun declareQueueBind() {
-        conn()?.createChannel()?.queueBind(QUEUE_NAME, "component-exchange", "")
+        conn()?.createChannel()?.queueBind(QUEUE_NAME, "user-exchange", "")
     }
 
     fun send(message: MutableMap<String, String>) {
         conn().use { connection ->
             connection?.createChannel()?.use { channel ->
                 channel.basicPublish(
-                    "component-exchange", "", null,
+                    "user-exchange", "", null,
                     jacksonObjectMapper().writeValueAsBytes(message)
                 )
-                //println("[x] Sent '$message")
+                println("[x] Sent '$message")
             }
         }
     }

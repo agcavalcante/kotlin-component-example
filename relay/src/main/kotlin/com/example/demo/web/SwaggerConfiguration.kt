@@ -34,10 +34,10 @@ class SwaggerConfiguration {
     }
 
     private fun getApiInfo(): ApiInfo {
-            val contact = Contact("Gabriel Cavalcante", "@gabre", "gabriel.longarp@gmail.com")
+            val contact = Contact("Gabriel Cavalcante", "@gabre", "gabriel@gabriel.com")
         return ApiInfoBuilder()
-            .title("Component API")
-            .description("Controle de Estoque API")
+            .title("Client API")
+            .description("Client control.")
             .version("1.0.0")
             .license("Apache 2.0")
             .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0")

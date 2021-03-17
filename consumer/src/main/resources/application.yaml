@@ -2,15 +2,15 @@ spring:
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI:mongodb://root:root@localhost:27017/}
-      database: component-db
+      database: client
       authentication-database: admin
   rabbitmq:
     port: 5672
     host: ${SPRING_RABBITMQ_HOST:localhost}
     username: guest
     password: guest
-    queue: component-zone
-    consumer-tag: component-zone
+    queue: user
+    consumer-tag: user
 
 server:
   port: 8091

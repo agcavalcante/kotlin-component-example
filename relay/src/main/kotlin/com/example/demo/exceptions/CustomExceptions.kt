@@ -7,4 +7,4 @@ import org.springframework.web.bind.annotation.ResponseStatus
 class NoContentException(exceptionMessage: String) : RuntimeException(exceptionMessage)
 
 @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-class IllegalQuantityException(exceptionMessage: String) : RuntimeException(exceptionMessage)
+class IllegalCpfFormatException(exceptionMessage: String) : RuntimeException(exceptionMessage)
