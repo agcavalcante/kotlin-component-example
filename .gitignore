@@ -1,2 +1,12 @@
 .DS_Store
 .idea
+relay/.idea
+relay/.gradle
+relay/build
+relay/out
+relay/gradle
+consumer/.idea
+consumer/.gradle
+consumer/build
+consumer/out
+consumer/gradle
