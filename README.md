@@ -24,8 +24,7 @@ A primeira coisa a ser feita é criar os containeres declarados no ```docker-com
 As aplicações irão subir nas seguintes portas:
 * RabbitMQ - (http://localhost:15672) - a credencial padrão é **guest/guest**.
 * MongoDB - (http://localhost:27017) - tenha um cliente de banco de dados, eu utilizo o [Robo3T](https://robomongo.org/download)
-* Prometheus - (http://localhost:9090)
+* Relay - (http://localhost:8090) - Nosso ponto de entrada da API.
+* Consumer - (http://localhost:8091) - Que irá fazer a ponte entre o RabbitMQ e o MongoDB.
+* Prometheus - (http://localhost:9090).
 * Grafana - (http://localhost:3000) - a credencial padrão é **admin/admin**.
-
-###### Iniciando as aplicações
-
