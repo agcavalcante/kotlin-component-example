@@ -28,3 +28,9 @@ As aplicações irão subir nas seguintes portas:
 * Consumer - (http://localhost:8091) - Que irá fazer a ponte entre o RabbitMQ e o MongoDB.
 * Prometheus - (http://localhost:9090).
 * Grafana - (http://localhost:3000) - a credencial padrão é **admin/admin**.
+
+###### Grafana query example
+* ```http_server_requests_seconds_count{exception="None", instance="localhost:8090", job="spring-relay", status="200", uri="/component"}```
+
+###### Prometheus query example
+* ```http_server_requests_seconds_count{instance="localhost:8090", status=~"2..", uri="/component"}```
