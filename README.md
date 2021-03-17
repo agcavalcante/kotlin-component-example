@@ -30,7 +30,7 @@ As aplicações irão subir nas seguintes portas:
 * Grafana - (http://localhost:3000) - a credencial padrão é **admin/admin**.
 
 ###### Grafana query example
-* ```http_server_requests_seconds_count{exception="None", instance="localhost:8090", job="spring-relay", status="200", uri="/component"}```
+* ```http_server_requests_seconds_count{exception="None", instance="localhost:8090", job="spring-relay", status="200", uri="/client"}```
 
 ###### Prometheus query example
-* ```http_server_requests_seconds_count{instance="localhost:8090", status=~"2..", uri="/component"}```
+* ```http_server_requests_seconds_count{instance="localhost:8090", status=~"2..", uri="/client"}```
