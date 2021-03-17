@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ComponentServiceImpl.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">relay</a> &gt; <a href="index.source.html" class="el_package">com.example.demo.service</a> &gt; <span class="el_source">ComponentServiceImpl.kt</span></div><h1>ComponentServiceImpl.kt</h1><pre class="source lang-java linenums">package com.example.demo.service
+
+import com.example.demo.exceptions.ExceptionsConstants
+import com.example.demo.exceptions.ExceptionsConstants.Exceptions.QUANTITY_EQUALS_OR_LOWER_THAN_ZERO
+import com.example.demo.data.component.Component
+import com.example.demo.exceptions.IllegalQuantityException
+import com.example.demo.exceptions.NoContentException
+import com.example.demo.sender.SendMessage
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import org.springframework.stereotype.Service
+
+@Service
+<span class="pc" id="L13">class ComponentServiceImpl(var sendMessage: SendMessage) : ComponentService{</span>
+
+    override fun resolveComponentToShow(components: MutableList&lt;Component&gt;): MutableList&lt;Component&gt;? {
+<span class="fc" id="L16">        val componentListToReturn = mutableListOf&lt;Component&gt;()</span>
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">        if (components.size != 0) {</span>
+<span class="fc bfc" id="L18" title="All 2 branches covered.">            for (item in components.iterator()) {</span>
+<span class="fc bfc" id="L19" title="All 2 branches covered.">                if (item.isActive == true) {</span>
+<span class="fc" id="L20">                    componentListToReturn.add(item)</span>
+                }
+            }
+        }
+
+<span class="pc bpc" id="L25" title="1 of 2 branches missed.">        if (componentListToReturn.size == 0)</span>
+<span class="nc" id="L26">            throw NoContentException(ExceptionsConstants.Exceptions.NO_CONTENT_EXCEPTION)</span>
+<span class="fc" id="L27">        return componentListToReturn</span>
+    }
+
+    override fun resolveOneComponentToShow(component: Component): Component {
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        return if (component.isActive == true) {</span>
+<span class="fc" id="L32">            component</span>
+        } else {
+<span class="nc" id="L34">            throw NoContentException(ExceptionsConstants.Exceptions.NO_CONTENT_EXCEPTION)</span>
+        }
+    }
+
+    override fun verifyQuantityBeforeInsert(component: Component, method: String): Component {
+<span class="fc" id="L39">        when {</span>
+<span class="pc bpc" id="L40" title="1 of 4 branches missed.">            component.quantity == 0 -&gt; throw IllegalQuantityException(QUANTITY_EQUALS_OR_LOWER_THAN_ZERO)</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            component.quantity!! &lt; 0 -&gt; throw IllegalQuantityException(QUANTITY_EQUALS_OR_LOWER_THAN_ZERO)</span>
+            else -&gt; {
+<span class="fc" id="L43">                mappingObjectToSend(component, method)</span>
+<span class="fc" id="L44">                return component</span>
+            }
+        }
+    }
+
+    override fun mappingObjectToSend(component: Component, method: String) {
+<span class="fc" id="L50">        val mappedObject = mutableMapOf&lt;String, String&gt;()</span>
+<span class="fc" id="L51">        mappedObject[&quot;method&quot;] = method</span>
+<span class="fc" id="L52">        mappedObject[&quot;content&quot;] = jacksonObjectMapper().writeValueAsString(component)</span>
+<span class="fc" id="L53">        return sendMessage.send(mappedObject)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
