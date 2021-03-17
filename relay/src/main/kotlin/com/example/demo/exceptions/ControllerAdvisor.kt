@@ -4,6 +4,7 @@ import com.example.demo.data.ErrorsDetails
 import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
@@ -29,5 +30,11 @@ class ControllerAdvisor : ResponseEntityExceptionHandler() {
     fun handleConflict(exception: EmptyResultDataAccessException, request: WebRequest): ResponseEntity<ErrorsDetails> {
         val errorsDetails = ErrorsDetails(Date(), "No content to show", "There is no data for the searched id")
         return ResponseEntity(errorsDetails, HttpStatus.NOT_FOUND)
+    }
+
+    @ExceptionHandler(value = [(UsernameNotFoundException::class)])
+    fun handleConflict(exception: UsernameNotFoundException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorsDetails = ErrorsDetails(Date(), "Auth invalid", "Your are not authenticated")
+        return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
     }
 }

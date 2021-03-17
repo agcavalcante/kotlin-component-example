@@ -6,7 +6,7 @@ services:
     hostname: rabbitmq
     ports:
       - "15672:15672"
-      - "5670:5672"
+      - "5672:5672"
     restart: on-failure
     network_mode: host
 
@@ -19,7 +19,7 @@ services:
       - rabbitmq
       - mongodb
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@localhost:27017/
       - SPRING_RABBITMQ_HOST=localhost  
     network_mode: host
 
@@ -33,7 +33,7 @@ services:
       - mongodb
       - relay
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://camarguinho:camarguinho@localhost:27017/
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@localhost:27017/
       - SPRING_RABBITMQ_HOST=localhost  
     network_mode: host
 
@@ -42,9 +42,44 @@ services:
     hostname: mongodb
     environment:
       - MONGO_INITDB_DATABASE=component-db
-      - MONGO_INITDB_ROOT_USERNAME=camarguinho
-      - MONGO_INITDB_ROOT_PASSWORD=camarguinho
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
       - "27017:27017"
     volumes:
       - ./mongod/config/mongod.conf:/etc/mongod.conf
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus-volume:/prometheus
+    command: --config.file=/etc/prometheus/prometheus.yaml
+    network_mode: host
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    # links:
+    #   - prometheus:prometheus
+    volumes:
+      - grafana-volume:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_DOMAIN=myrul.com
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_USER=myadrress@gmail.com
+      - GF_SMTP_PASSWORD=mypassword
+      - GF_SMTP_FROM_ADDRESS=myaddress@gmail.com
+    network_mode: host
+
+volumes:
+  prometheus-volume:
+  grafana-volume:

@@ -1,8 +1,8 @@
 package com.example.demo.controller
 
-import com.example.demo.configuration.ExceptionsConstants
-import com.example.demo.data.Component
-import com.example.demo.data.ComponentRepository
+import com.example.demo.exceptions.ExceptionsConstants
+import com.example.demo.data.component.Component
+import com.example.demo.repository.ComponentRepository
 import com.example.demo.exceptions.NoContentException
 import com.example.demo.request.ComponentRequest
 import com.example.demo.service.ComponentService
@@ -66,7 +66,6 @@ class ComponentController(
             ),
         ]
     )
-
     @PutMapping("/{id}")
     fun patchOneComponent(
         @RequestBody request: ComponentRequest,
