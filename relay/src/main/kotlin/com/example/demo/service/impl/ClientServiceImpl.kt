@@ -1,17 +1,19 @@
 package com.example.demo.service.impl
 
-import com.example.demo.exceptions.ExceptionsConstants
+import com.example.demo.configuration.rabbitmq.isCpf
 import com.example.demo.data.client.Client
+import com.example.demo.exceptions.*
 import com.example.demo.exceptions.ExceptionsConstants.Exceptions.CPF_VALIDATION_INCORRECT
-import com.example.demo.exceptions.IllegalCpfFormatException
-import com.example.demo.exceptions.NoContentException
+import com.example.demo.exceptions.ExceptionsConstants.Exceptions.USER_ALREADY_INACTIVATED
+import com.example.demo.repository.ClientRepository
 import com.example.demo.sender.SendMessage
 import com.example.demo.service.ClientService
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
-class ClientServiceImpl(var sendMessage: SendMessage) : ClientService {
+class ClientServiceImpl(var sendMessage: SendMessage, var clientRepository: ClientRepository) : ClientService {
 
     override fun resolveClientToShow(clients: MutableList<Client>): MutableList<Client>? {
         val clientListToReturn = mutableListOf<Client>()
@@ -37,13 +39,32 @@ class ClientServiceImpl(var sendMessage: SendMessage) : ClientService {
     }
 
     override fun verifyCpfBeforeInsert(client: Client, method: String): Client {
-        when {
-            client.cpf == null -> throw IllegalCpfFormatException(CPF_VALIDATION_INCORRECT)
-            else -> {
+
+        val clientRetrieved: Optional<Client>? = client.cpf?.let { clientRepository.findOneByCpf(it) }
+
+        if (client.cpf?.isCpf() == true) {
+            if (clientRetrieved?.isPresent == false) {
                 mappingObjectToSend(client, method)
                 return client
+            } else {
+                throw UserAlreadyRegisteredException(CPF_VALIDATION_INCORRECT)
             }
         }
+        throw IllegalCpfFormatException(CPF_VALIDATION_INCORRECT)
+    }
+
+    override fun verifyAlreadyDeletedUser(client: Client, method: String) {
+        if (client.isActive == true) {
+            return mappingObjectToSend(
+                Client(
+                    id = client.id,
+                    name = client.name,
+                    isActive = false,
+                    cpf = client.cpf
+                ), method
+            )
+        }
+        throw UserAlreadyInactivatedException(USER_ALREADY_INACTIVATED)
     }
 
     override fun mappingObjectToSend(client: Client, method: String) {

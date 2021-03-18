@@ -8,3 +8,9 @@ class NoContentException(exceptionMessage: String) : RuntimeException(exceptionM
 
 @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 class IllegalCpfFormatException(exceptionMessage: String) : RuntimeException(exceptionMessage)
+
+@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+class UserAlreadyRegisteredException(exceptionMessage: String) : RuntimeException(exceptionMessage)
+
+@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+class UserAlreadyInactivatedException(exceptionMessage: String) : RuntimeException(exceptionMessage)

@@ -78,7 +78,6 @@ class ClientController(
             isActive = clientInDB.isActive,
             cpf = request.cpf
         )
-        //return ResponseEntity(clientService.mappingObjectToSend(clientToUpdate, RequestMethod.POST.name), HttpStatus.OK)
         return ResponseEntity.ok().body(clientService.verifyCpfBeforeInsert(clientToUpdate, RequestMethod.POST.name))
     }
 
@@ -89,7 +88,6 @@ class ClientController(
         val clientReceived = Client(
             name = request.name, isActive = true, cpf = request.cpf
         )
-        //return ResponseEntity(clientService.mappingObjectToSend(clientReceived, RequestMethod.POST.name), HttpStatus.OK)
         return ResponseEntity.ok().body(clientService.verifyCpfBeforeInsert(clientReceived, RequestMethod.POST.name))
     }
 
@@ -104,14 +102,7 @@ class ClientController(
     @DeleteMapping("/inactive/{id}")
     fun inactiveOneClient(@PathVariable("id") id: String): ResponseEntity<Unit> {
         val clientInDB = repository.findOneById(ObjectId(id))
-        clientService.mappingObjectToSend(
-            Client(
-                id = clientInDB.id,
-                name = clientInDB.name,
-                isActive = false,
-                cpf = clientInDB.cpf
-            ), RequestMethod.DELETE.name
-        )
+        clientService.verifyAlreadyDeletedUser(clientInDB, RequestMethod.DELETE.name)
         return ResponseEntity.noContent().build()
     }
 }

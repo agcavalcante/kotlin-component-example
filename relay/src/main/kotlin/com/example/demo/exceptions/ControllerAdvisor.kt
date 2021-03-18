@@ -37,4 +37,16 @@ class ControllerAdvisor : ResponseEntityExceptionHandler() {
         val errorsDetails = ErrorsDetails(Date(), "Auth invalid", "Your are not authenticated")
         return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
     }
+
+    @ExceptionHandler(value = [(UserAlreadyRegisteredException::class)])
+    fun handleConflict(exception: UserAlreadyRegisteredException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorsDetails = ErrorsDetails(Date(), "Cant save", "User already registered")
+        return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
+    }
+
+    @ExceptionHandler(value = [(UserAlreadyInactivatedException::class)])
+    fun handleConflict(exception: UserAlreadyInactivatedException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorsDetails = ErrorsDetails(Date(), "Can't proceed", "User already inactivated")
+        return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
+    }
 }

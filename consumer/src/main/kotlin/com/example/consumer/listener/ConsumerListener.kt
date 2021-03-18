@@ -9,6 +9,7 @@ class ConsumerListener(val mapperService: MapperService) {
 
     @RabbitListener(queues = ["\${spring.rabbitmq.queue}"])
     fun receivedMessage(msg: String) {
+        println("[x] Consumed '$msg")
         mapperService.remappingToClient(msg)
     }
 

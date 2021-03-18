@@ -61,3 +61,6 @@ echo creating consumer image
 sleep 1
 docker build -f ConsumerDockerfile -t spring/consumer:latest .
 echo images created successfuly, update the compose
+cd libs
+# shellcheck disable=SC2035
+rm -rf *

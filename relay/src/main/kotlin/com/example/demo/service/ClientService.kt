@@ -8,6 +8,8 @@ interface ClientService {
 
     fun resolveOneClientToShow(client: Client): Client
 
+    fun verifyAlreadyDeletedUser(client: Client, method: String)
+
     fun mappingObjectToSend(client: Client, method: String)
 
     fun verifyCpfBeforeInsert(client: Client, method: String): Client
