@@ -37,9 +37,21 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST,"/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtUtil = jwtUtil, userService = userService))
+                .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtUtil = jwtUtil, userService))
                 .addFilter(JWTAuthorizationFilter(authenticationManager(), jwtUtil = jwtUtil, userDetailService = userDetailsService))
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).authenticationEntryPoint(authenticationEntryPoint())
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    }
+
+    @Bean
+    fun authenticationEntryPoint(): RestAuthenticationEntryPoint? {
+        return RestAuthenticationEntryPoint()
+    }
+
+    @Bean
+    fun accessDeniedHandler(): RestAccessDeniedHandler? {
+        return RestAccessDeniedHandler()
     }
 
     @Bean
