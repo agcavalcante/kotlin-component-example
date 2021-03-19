@@ -49,4 +49,10 @@ class ControllerAdvisor : ResponseEntityExceptionHandler() {
         val errorsDetails = ErrorsDetails(Date(), "Can't proceed", "User already inactivated")
         return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
     }
+
+    @ExceptionHandler(value = [(NotActivatedAccountException::class)])
+    fun handleConflict(exception: NotActivatedAccountException, request: WebRequest): ResponseEntity<ErrorsDetails> {
+        val errorsDetails = ErrorsDetails(Date(), "Auth invalid", "Account not activated")
+        return ResponseEntity(errorsDetails, HttpStatus.FORBIDDEN)
+    }
 }

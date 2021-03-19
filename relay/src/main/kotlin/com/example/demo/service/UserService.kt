@@ -6,6 +6,6 @@ interface UserService {
 
     fun create(user: User): User
 
-    fun myself(): String?
+    fun verifyIfUserIsActive(email: String?)
 
 }

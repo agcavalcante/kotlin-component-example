@@ -14,3 +14,6 @@ class UserAlreadyRegisteredException(exceptionMessage: String) : RuntimeExceptio
 
 @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
 class UserAlreadyInactivatedException(exceptionMessage: String) : RuntimeException(exceptionMessage)
+
+@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+class NotActivatedAccountException(exceptionMessage: String) : RuntimeException(exceptionMessage)

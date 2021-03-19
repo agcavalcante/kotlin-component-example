@@ -1,5 +1,6 @@
 package com.example.demo.security
 
+import com.example.demo.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -25,6 +26,9 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
     private lateinit var userDetailsService: UserDetailsService
 
     @Autowired
+    private lateinit var userService: UserService
+
+    @Autowired
     private lateinit var jwtUtil: JWTUtil
 
 
@@ -33,7 +37,7 @@ class SecurityConfig: WebSecurityConfigurerAdapter() {
                 .antMatchers(HttpMethod.POST,"/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtUtil = jwtUtil))
+                .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtUtil = jwtUtil, userService = userService))
                 .addFilter(JWTAuthorizationFilter(authenticationManager(), jwtUtil = jwtUtil, userDetailService = userDetailsService))
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }

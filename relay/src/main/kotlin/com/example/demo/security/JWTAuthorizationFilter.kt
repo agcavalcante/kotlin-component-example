@@ -38,5 +38,4 @@ class JWTAuthorizationFilter(authenticationManager: AuthenticationManager, priva
         }
         throw UsernameNotFoundException("Auth invalid!")
     }
-
 }

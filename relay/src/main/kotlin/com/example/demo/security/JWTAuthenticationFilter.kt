@@ -4,6 +4,7 @@ import com.example.demo.authorization
 import com.example.demo.bearer
 import com.example.demo.data.user.Credentials
 import com.example.demo.data.user.UserDetailsImpl
+import com.example.demo.service.UserService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -18,17 +19,19 @@ class JWTAuthenticationFilter: UsernamePasswordAuthenticationFilter {
 
     private var jwtUtil: JWTUtil
 
-    constructor(authenticationManager: AuthenticationManager, jwtUtil: JWTUtil) : super() {
+    private var userService: UserService
+
+    constructor(authenticationManager: AuthenticationManager, jwtUtil: JWTUtil, userService: UserService) : super() {
         this.authenticationManager = authenticationManager
         this.jwtUtil = jwtUtil
+        this.userService = userService
     }
 
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse?): Authentication? {
         try {
             val (email, password) = ObjectMapper().readValue(request.inputStream, Credentials::class.java)
-
+            userService.verifyIfUserIsActive(email)
             val token = UsernamePasswordAuthenticationToken(email, password)
-
             return authenticationManager.authenticate(token)
         } catch (e: Exception) {
             throw UsernameNotFoundException("User not found!")
